@@ -18,7 +18,34 @@ defmodule ApiValidator.Router do
     json_data = Jason.encode!(data)
 
     send_resp(conn, 200, json_data)
+  end
 
+  get "/cpf/:cpf" do
+    cpf = to_string(cpf)
+    cpf = Cpf.limpa_cpf(cpf)
+
+    cond do
+      not Cpf.tamanho_valido?(cpf) ->
+        conn
+        |> put_resp_content_type("application/json")
+        |> send_resp(400, Jason.encode!(%{status: "Invalido", motivo: "Tamanho Invalido"}))
+
+      not Cpf.validar_cpf(cpf) ->
+        conn
+        |> put_resp_content_type("application/json")
+        |> send_resp(
+          400,
+          Jason.encode!(%{status: "Invalido", motivo: "Cpf não segue as regras de autenticação"})
+        )
+
+      true ->
+        conn
+        |> put_resp_content_type("application/json")
+        |> send_resp(
+          200,
+          Jason.encode!(%{status: "Valido", motivo: "Cpf segue as regras de autenticação"})
+        )
+    end
   end
 
   match _ do
