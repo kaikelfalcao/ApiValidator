@@ -7,14 +7,18 @@ defmodule ApiValidator.Router do
 
   plug(Plug.Parsers,
     parsers: [:json],
-    pass: [~c"application/json"],
+    pass: ["application/json"],
     json_decoder: Jason
   )
 
   plug(:dispatch)
 
   get "/" do
-    send_resp(conn, 200, "Ok")
+    data = %{message: "Ok"}
+    json_data = Jason.encode!(data)
+
+    send_resp(conn, 200, json_data)
+
   end
 
   match _ do

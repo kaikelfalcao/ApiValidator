@@ -12,6 +12,6 @@ defmodule ApiValidatorTest do
 
     assert conn.state == :sent
     assert conn.status == 200
-    assert conn.resp_body == "Ok"
+    assert Jason.decode!(conn.resp_body) == %{"message" => "Ok"}
   end
 end

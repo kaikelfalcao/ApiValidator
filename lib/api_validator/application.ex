@@ -10,7 +10,10 @@ defmodule ApiValidator.Application do
     children = [
       # Starts a worker by calling: ApiValidator.Worker.start_link(arg)
       # {ApiValidator.Worker, arg}
-      {Plug.Cowboy, scheme: :http, plug: ApiValidator.Router, options: [port: 8080]}
+      {Plug.Cowboy,
+       scheme: :http,
+       plug: ApiValidator.Router,
+       options: [port: Application.get_env(:api_validator, :port)]}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
